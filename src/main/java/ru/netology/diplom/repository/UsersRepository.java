@@ -14,10 +14,4 @@ public interface UsersRepository extends JpaRepository<UserEntity, Integer> {
     Optional<UserEntity> findByLogin(@org.hibernate.validator.constraints.NotBlank String login);
 
 
-//    @Query(value = "select o.password from UserEntity o")
-//    List<String> findAllByLogin();
-//
-//    Optional<UserEntity> findUserEntitiesByLogin(@NotBlank String login);
-
-
 }
