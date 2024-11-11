@@ -12,7 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
+//@ToString
 @Table(name = "cloud_file_entity")
 public class CloudFileEntity {
     @Id
@@ -20,7 +20,7 @@ public class CloudFileEntity {
     private Integer id;
 
 
-    @Column(name = "file_Name", length = 100, nullable = false)
+    @Column(name = "file_Name",  nullable = false)
     private String fileName;
 
     @Column(name = "file_size")

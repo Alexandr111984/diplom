@@ -22,12 +22,3 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
-
-### Мои написания npm install -D node-sass
-```
-npm start
-
-npm audit fix
-```
-
-

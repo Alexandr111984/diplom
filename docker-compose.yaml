@@ -1,0 +1,31 @@
+version: '4'
+services:
+
+  app:
+    image: myapp:1
+
+
+    environment:
+#      - spring.datasource.url=jdbc:h2:mem:test
+#      - spring.datasource.username=postgres
+#      - spring.datasource.password=123
+
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+    ports:
+      - "8080:8080"
+
+
+
+  file-service.app:
+    build:
+      dockerfile: Dockerfile
+    image: 'file-service.app:latest'
+    ports:
+        - '8081:8080'
+
+
+
+
+
+
