@@ -18,6 +18,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -49,7 +50,8 @@ public class JWTToken {
                 .setIssuedAt(now)
                 .setNotBefore(now)
                 .setExpiration(exp)
-                .signWith(secret)
+                .setHeader(Map.of("type", "JWT"))
+                .signWith(secret,SignatureAlgorithm.HS256)
                 .claim("roles", userEntity)
                 .compact();
         log.info("Auth-token: {} добавлен в список активных токенов", token);
@@ -72,6 +74,7 @@ public class JWTToken {
                     .setSigningKey(secret)
                     .build()
                     .parseClaimsJws(token);
+
             return true;
         } catch (ExpiredJwtException expEx) {
             log.error("Срок действия токена истек (Token expired)", expEx);

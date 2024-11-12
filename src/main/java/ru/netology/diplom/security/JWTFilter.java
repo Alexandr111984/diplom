@@ -36,11 +36,11 @@ public class JWTFilter extends GenericFilterBean {
         return null;
     }
 
-    private static Set<Role> getRole(Claims claims) {
-        List<String> roles = claims.get("roles", List.class);
-        return roles.stream().map(Role::valueOf)
-                .collect(Collectors.toSet());
-    }
+//    private static Set<Role> getRole(Claims claims) {
+//        List<String> roles = claims.get("roles", List.class);
+//        return roles.stream().map(Role::valueOf)
+//                .collect(Collectors.toSet());
+//    }
 
 
     @Override
@@ -51,7 +51,7 @@ public class JWTFilter extends GenericFilterBean {
             Claims claims = jwtToken.getAccessClaims(token);
 
             JWTAuthentication jwtAuthentication = new JWTAuthentication();
-            jwtAuthentication.setRoles(getRole(claims));
+            //jwtAuthentication.setRoles(getRole(claims));
             jwtAuthentication.setUsername(claims.getSubject());
             jwtAuthentication.setAuthenticated(true);
 
