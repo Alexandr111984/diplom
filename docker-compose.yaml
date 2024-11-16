@@ -1,28 +1,30 @@
-version: '4'
+version: '3'
+
 services:
+  client-backend:
 
-  app:
-    image: myapp:1
-
-
-    environment:
-#      - spring.datasource.url=jdbc:h2:mem:test
-#      - spring.datasource.username=postgres
-#      - spring.datasource.password=123
-
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-
-    ports:
-      - "8080:8080"
-
-
-
-  file-service.app:
+    image: diplom:2024
     build:
+      context: .
       dockerfile: Dockerfile
-    image: 'file-service.app:latest'
+
     ports:
-        - '8081:8080'
+      - "8085"
+
+  client:
+          container_name: frontend-client
+          build:
+            context: netology-diplom-frontend
+            dockerfile: Dockerfile
+          image: front:latest
+
+          ports:
+                - "8080"
+
+
+
+
+
 
 
 

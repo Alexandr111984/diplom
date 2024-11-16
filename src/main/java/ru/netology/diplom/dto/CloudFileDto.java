@@ -18,6 +18,7 @@ import java.util.UUID;
 public class CloudFileDto {
 
     @JsonProperty("fileName")
+    //private Integer userEntityId;
     private String fileName;
     private Long size;
     private Instant date;

@@ -1,5 +1,6 @@
 package ru.netology.diplom.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -12,12 +13,13 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-//@ToString
+@ToString
 @Table(name = "cloud_file_entity")
 public class CloudFileEntity {
     @Id
-    @GeneratedValue
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer fileId;
+
 
 
     @Column(name = "file_Name",  nullable = false)
@@ -29,27 +31,19 @@ public class CloudFileEntity {
     @Column(nullable = false, name = "upload_date")
     private Instant date;
 
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
-    @Column(unique = true, name = "file_key")
+//    @GenericGenerator(
+//            name = "UUID",
+//            strategy = "org.hibernate.id.UUIDGenerator"
+    //)
+
+    @Column(name = "file_key")
     private UUID key;
 
 
-    @ManyToOne
-    @JoinColumn(name = "id",insertable=false,updatable=false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "fileId",insertable=false,updatable=false)
+    @JsonIgnore
     private UserEntity userEntity;
 
-    @Override
-    public String toString() {
-        return "CloudFileEntity{" +
-                "id=" + id +
-                ", fileName='" + fileName + '\'' +
-                ", size=" + size +
-                ", date=" + date +
-                ", key=" + key +
-                ", userEntity=" + userEntity +
-                '}';
-    }
+
 }

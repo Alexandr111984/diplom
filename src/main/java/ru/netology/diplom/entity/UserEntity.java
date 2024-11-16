@@ -30,13 +30,13 @@ public class UserEntity {
     private String password;
 
 
-    //    @ElementCollection
-//    @Enumerated(EnumType.STRING)
-//    @Column(nullable = false, length = 15)
-    private Set<Role> roles;
+////        @ElementCollection
+////    @Enumerated(EnumType.STRING)
+////    @Column(nullable = false, length = 15)
+//    private Set<Role> roles;
 
 
-    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userEntity",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<CloudFileEntity> cloudFileEntityList;
 
     public UserEntity() {
@@ -48,9 +48,7 @@ public class UserEntity {
                 "id=" + id +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
-                //", roles=" + roles +
                 ", cloudFileEntityList=" + cloudFileEntityList +
                 '}';
     }
-
 }
