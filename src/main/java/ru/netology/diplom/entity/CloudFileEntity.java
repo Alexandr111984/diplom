@@ -18,9 +18,10 @@ import java.util.UUID;
 public class CloudFileEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer fileId;
+    private Integer id;
 
-
+    @Column(name = "userEntityId", unique = true)
+    private Integer userEntityId;
 
     @Column(name = "file_Name",  nullable = false)
     private String fileName;
@@ -41,7 +42,7 @@ public class CloudFileEntity {
 
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "fileId",insertable=false,updatable=false)
+    @JoinColumn(name = "userEntityId",insertable=false,updatable=false)
     @JsonIgnore
     private UserEntity userEntity;
 

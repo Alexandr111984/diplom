@@ -12,7 +12,6 @@ import ru.netology.diplom.service.UserService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/")
 @Slf4j
 public class UserController {
     private final UsersRepository usersRepository;
@@ -20,7 +19,7 @@ public class UserController {
     private final UserService userService;
 
 
-    @PostMapping("login")
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<Token> login(@RequestBody UserDTO userDTO) {
         log.info("Попытка авторизоваться на сервере");
         Token token = userService.login(userDTO);

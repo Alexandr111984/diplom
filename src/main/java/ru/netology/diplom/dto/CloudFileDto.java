@@ -17,9 +17,9 @@ import java.util.UUID;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CloudFileDto {
 
-    @JsonProperty("fileName")
-    //private Integer userEntityId;
+    @JsonProperty
     private String fileName;
+    private Integer userEntityId;
     private Long size;
     private Instant date;
     private UUID key;
@@ -27,5 +27,8 @@ public class CloudFileDto {
 
     public CloudFileDto(String fileName) {
         this.fileName = fileName;
+    }
+    public CloudFileDto(Integer userEntityId) {
+        this.userEntityId = userEntityId;
     }
 }
