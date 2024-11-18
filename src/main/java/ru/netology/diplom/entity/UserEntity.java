@@ -2,12 +2,7 @@ package ru.netology.diplom.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ru.netology.diplom.model.Role;
-
-
 import java.util.List;
-import java.util.Set;
-
 @Entity
 @Getter
 @Setter
@@ -29,11 +24,6 @@ public class UserEntity {
     @Column(name="password")
     private String password;
 
-
-////        @ElementCollection
-////    @Enumerated(EnumType.STRING)
-////    @Column(nullable = false, length = 15)
-//    private Set<Role> roles;
 
 
     @OneToMany(mappedBy = "userEntity",fetch = FetchType.LAZY, cascade = CascadeType.ALL)

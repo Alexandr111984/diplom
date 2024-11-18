@@ -22,39 +22,38 @@ public class CloudController {
     private final CloudService cloudService;
 
 
-    @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-    public ResponseEntity<String> uploadFile(@RequestParam String fileName, @NotNull @RequestParam("file") MultipartFile multipartFile) {
-        log.info("Получили файл на загрузку: {}", fileName);
+    @RequestMapping(value = "/file", method = RequestMethod.POST)
+    public ResponseEntity<String> uploadFile(@RequestParam String filename, @NotNull @RequestParam("file") MultipartFile multipartFile) {
+        log.info("Получили файл на загрузку: {}", filename);
         //noinspection SingleStatementInBlock
-        if (cloudService.uploadFile(multipartFile, fileName)) {
+        if (cloudService.uploadFile(multipartFile, filename)) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
-    @RequestMapping(value = "/deleteFile", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteFile(@RequestParam String fileName) {
-        log.info("Начинаем искать файл {} для удаления", fileName);
-        if (cloudService.deleteFile(fileName)) {
+    @RequestMapping(value = "/file", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteFile(@RequestParam String filename) {
+        log.info("Начинаем искать файл {} для удаления", filename);
+        if (cloudService.deleteFile(filename)) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
-
-    @RequestMapping(value = "/putFile", method = RequestMethod.PUT)
-    public ResponseEntity<Void> putFile(@RequestParam String fileName, @RequestBody CloudFileDto cloudFileDto) {
+    @RequestMapping(value = "/file", method = RequestMethod.PUT)
+    public ResponseEntity<Void> putFile(@RequestParam String filename, @RequestBody CloudFileDto cloudFileDto) {
         log.info("поиск");
-        if (cloudService.putFile(fileName, cloudFileDto)) {
+        if (cloudService.putFile(filename, cloudFileDto)) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
-    @RequestMapping(value = "/listFile", method = RequestMethod.GET)
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ResponseEntity<List<CloudFileDto>> getAllFile() {
         log.info("поиск");
         var result = cloudService.getAllFile();

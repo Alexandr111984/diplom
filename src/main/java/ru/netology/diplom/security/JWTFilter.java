@@ -13,14 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 import ru.netology.diplom.config.AuthenticationConfigConstants;
-import ru.netology.diplom.model.Role;
-
-
 import java.io.IOException;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 @Component
 @Slf4j
 @RequiredArgsConstructor
@@ -36,13 +29,6 @@ public class JWTFilter extends GenericFilterBean {
         return null;
     }
 
-//    private static Set<Role> getRole(Claims claims) {
-//        List<String> roles = claims.get("roles", List.class);
-//        return roles.stream().map(Role::valueOf)
-//                .collect(Collectors.toSet());
-//    }
-
-
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         String token = getTokenFromRequest((HttpServletRequest) servletRequest);
@@ -51,7 +37,6 @@ public class JWTFilter extends GenericFilterBean {
             Claims claims = jwtToken.getAccessClaims(token);
 
             JWTAuthentication jwtAuthentication = new JWTAuthentication();
-            //jwtAuthentication.setRoles(getRole(claims));
             jwtAuthentication.setUsername(claims.getSubject());
             jwtAuthentication.setAuthenticated(true);
 

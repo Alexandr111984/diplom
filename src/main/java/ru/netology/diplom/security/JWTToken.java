@@ -51,7 +51,7 @@ public class JWTToken {
                 .setNotBefore(now)
                 .setExpiration(exp)
                 .setHeader(Map.of("type", "JWT"))
-                .signWith(secret,SignatureAlgorithm.HS256)
+                .signWith(secret, SignatureAlgorithm.HS256)
                 .claim("roles", userEntity)
                 .compact();
         log.info("Auth-token: {} добавлен в список активных токенов", token);

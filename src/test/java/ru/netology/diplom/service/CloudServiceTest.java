@@ -54,11 +54,11 @@ class CloudServiceTest {
                 .date(Instant.now())
                 .size(265L)
                 .key(UUID.randomUUID())
-                .fileName(FILE_NAME)
+                .filename(FILE_NAME)
                 .build();
 
         cloudFileDto = CloudFileDto.builder()
-                .fileName(FILE_NAME)
+                .filename(FILE_NAME)
                 .resource("TESTING".getBytes())
                 .build();
     }

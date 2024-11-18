@@ -18,15 +18,15 @@ import java.util.UUID;
 public class CloudFileDto {
 
     @JsonProperty
-    private String fileName;
+    private String filename;
     private Integer userEntityId;
     private Long size;
     private Instant date;
     private UUID key;
     private byte[] resource;
 
-    public CloudFileDto(String fileName) {
-        this.fileName = fileName;
+    public CloudFileDto(String filename) {
+        this.filename = filename;
     }
     public CloudFileDto(Integer userEntityId) {
         this.userEntityId = userEntityId;

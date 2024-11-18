@@ -5,9 +5,10 @@ import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,11 +20,12 @@ import ru.netology.diplom.security.JWTFilter;
 @EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+@EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig {
 
 
     private final JWTFilter jwtFilter;
+
 
 
     @Bean
@@ -34,20 +36,25 @@ public class SecurityConfig {
     @SneakyThrows
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) {
-        //noinspection removal
+        //noinspection removal,deprecation
         return http.httpBasic().disable()
                 .formLogin().disable()
-                .csrf().disable()
+                .csrf(AbstractHttpConfigurer::disable)
                 .cors().and()
                 .logout().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .authorizeRequests().requestMatchers(HttpMethod.POST, "/login").permitAll()
+                .authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/login").permitAll()
                 .and()
-                .authorizeRequests().anyRequest().permitAll()
+                .authorizeHttpRequests().anyRequest().permitAll()
 
                 .and()
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
 }
+
+
+
+
