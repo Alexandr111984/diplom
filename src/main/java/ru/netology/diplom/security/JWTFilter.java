@@ -13,7 +13,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 import ru.netology.diplom.config.AuthenticationConfigConstants;
+
 import java.io.IOException;
+
 @Component
 @Slf4j
 @RequiredArgsConstructor

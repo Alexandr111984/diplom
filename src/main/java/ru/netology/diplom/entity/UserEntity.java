@@ -2,7 +2,9 @@ package ru.netology.diplom.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -21,12 +23,11 @@ public class UserEntity {
     private String login;
 
 
-    @Column(name="password")
+    @Column(name = "password")
     private String password;
 
 
-
-    @OneToMany(mappedBy = "userEntity",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<CloudFileEntity> cloudFileEntityList;
 
     public UserEntity() {

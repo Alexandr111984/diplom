@@ -28,6 +28,7 @@ public class CloudFileDto {
     public CloudFileDto(String filename) {
         this.filename = filename;
     }
+
     public CloudFileDto(Integer userEntityId) {
         this.userEntityId = userEntityId;
     }

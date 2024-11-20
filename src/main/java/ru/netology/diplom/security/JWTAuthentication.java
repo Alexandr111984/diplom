@@ -22,7 +22,6 @@ public class JWTAuthentication implements Authentication {
     }
 
 
-
     @Override
     public Object getCredentials() {
         return null;

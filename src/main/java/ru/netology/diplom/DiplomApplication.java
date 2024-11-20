@@ -9,31 +9,30 @@ import ru.netology.diplom.entity.UserEntity;
 import ru.netology.diplom.repository.UsersRepository;
 
 
-
 @SpringBootApplication
 @RequiredArgsConstructor
 public class DiplomApplication implements CommandLineRunner {
 
-	private final UsersRepository usersRepository;
+    private final UsersRepository usersRepository;
 
-	private final PasswordEncoder passwordEncoder;
-
-
-	public static void main(String[] args) {
-		SpringApplication.run(DiplomApplication.class, args);
-	}
+    private final PasswordEncoder passwordEncoder;
 
 
-	@Override
-	public void run(String... args) throws Exception {
-		UserEntity userEntity = new UserEntity();
-		userEntity.setLogin("Alex");
-		userEntity.setPassword(passwordEncoder.encode("123"));
-		System.out.println(userEntity);
+    public static void main(String[] args) {
+        SpringApplication.run(DiplomApplication.class, args);
+    }
 
 
-		usersRepository.save(userEntity);
+    @Override
+    public void run(String... args) throws Exception {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setLogin("Alex");
+        userEntity.setPassword(passwordEncoder.encode("123"));
+        System.out.println(userEntity);
 
-	}
+
+        usersRepository.save(userEntity);
+
+    }
 
 }

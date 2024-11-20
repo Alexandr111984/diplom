@@ -11,6 +11,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -119,4 +120,17 @@ class CloudControllerTest {
         var result = cloudController.getAllFile();
         Assertions.assertEquals(ResponseEntity.ok(list), result);
     }
+
+    @Test
+    void getFileTest() {
+        var expected = ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + cloudFileDto.getFilename() + "\"")
+                .body(cloudFileDto.getFilename());
+
+        when(cloudService.getFile(FILE_NAME)).thenReturn(cloudFileDto);
+        var result = cloudController.getFile(FILE_NAME);
+        Assertions.assertEquals(expected, result);
+    }
+
+
 }

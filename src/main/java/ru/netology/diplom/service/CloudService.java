@@ -57,13 +57,29 @@ public class CloudService {
         return true;
     }
 
+
+    @SneakyThrows
+    @Transactional
+    public CloudFileDto getFile(String filename) {
+        Optional<CloudFileEntity> cloudFile = getCloudFileEntity(filename);
+        if (cloudFile.isPresent()) {
+            log.info("Файл {} найден на диске", filename);
+            return CloudFileDto.builder()
+                    .filename(filename)
+                    .build();
+        } else {
+            fileNotFound("Файл не удалось найди в БД");
+            return null;
+        }
+    }
+
     @SneakyThrows
     @Transactional()
     public boolean deleteFile(String filename) {
 
         Optional<CloudFileEntity> foundFile = getCloudFileEntity(filename);
 
-        log.info("ищем");
+        log.info("Ищем файл.");
         int idFoundFile = foundFile.get().getId();
         cloudRepository.deleteById(idFoundFile);
         log.info("Произвели удаление из БД файла:  {}", filename);

@@ -12,7 +12,6 @@ import java.util.Optional;
 public interface CloudRepository extends JpaRepository<CloudFileEntity, Integer> {
 
 
-
     @Modifying
     @Query("update CloudFileEntity c set c.filename = ?1 where c.id = ?2")
     int updateFilenameByUserEntityId(String filename, Integer id);

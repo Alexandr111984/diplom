@@ -26,8 +26,6 @@ public class SecurityConfig {
 
     private final JWTFilter jwtFilter;
 
-
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

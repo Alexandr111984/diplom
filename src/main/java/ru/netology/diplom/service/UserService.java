@@ -28,7 +28,6 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("Такого пользователя нет в базе данных"));
         log.info("Пользователь {} найден\n Его данные: {}", userDTO.getLogin(), userFound);
 
-        //проверяем закодированный пароль из БД
         if (passwordEncoder.matches(userDTO.getPassword(), userFound.getPassword())) {
             String token = jwtToken.generateToken(userFound);
             return new Token(token);
