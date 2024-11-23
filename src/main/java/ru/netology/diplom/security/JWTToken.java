@@ -1,14 +1,12 @@
 package ru.netology.diplom.security;
 
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import ru.netology.diplom.config.AuthenticationConfigConstants;
 import ru.netology.diplom.entity.UserEntity;
 
 import javax.crypto.SecretKey;
@@ -100,9 +98,5 @@ public class JWTToken {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-    }
-
-    public void removeToken(String token) {
-        listTokens.remove(token.substring(AuthenticationConfigConstants.TOKEN_PREFIX.length()));
     }
 }

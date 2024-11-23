@@ -17,6 +17,7 @@ import ru.netology.diplom.entity.CloudFileEntity;
 import ru.netology.diplom.entity.UserEntity;
 import ru.netology.diplom.repository.CloudRepository;
 import ru.netology.diplom.security.JWTToken;
+import ru.netology.diplom.util.CloudManager;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -26,6 +27,9 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CloudServiceTest {
+
+    @Mock
+    CloudManager cloudManager;
 
     @Mock
     JWTToken jwtToken;
@@ -45,8 +49,8 @@ class CloudServiceTest {
     void setUp() {
         userEntity = UserEntity.builder()
                 .id(USER_ENTITY_ID)
-                .login("test@yandex.ru")
-                .password("$2a$10$L4cA.wDXaxBESV/FUGchT.WyEFX6qgMrdGGjDl7kt9QMFVWobi5Ne")
+                .login("Egor")
+                .password("321")
                 .build();
 
         cloudFileEntity = CloudFileEntity.builder()
@@ -80,11 +84,15 @@ class CloudServiceTest {
         );
 
         when(jwtToken.getAuthenticatedUser()).thenReturn(userEntity);
+        when(cloudManager.upload(any(),any(), any())).thenReturn(true);
         when(cloudRepository.save(any(CloudFileEntity.class))).thenReturn(cloudFileEntity);
 
         boolean result = cloudService.uploadFile(mf, FILE_NAME);
         Assertions.assertTrue(result);
     }
+
+
+
 
     @Test
     void getAllFile() {

@@ -22,7 +22,6 @@ import ru.netology.diplom.entity.CloudFileEntity;
 import ru.netology.diplom.entity.UserEntity;
 import ru.netology.diplom.service.CloudService;
 
-
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -50,8 +49,8 @@ class CloudControllerTest {
         System.out.println("Начало теста");
         userEntity = UserEntity.builder()
                 .id(USER_ENTITY_ID)
-                .login("test@yandex.ru")
-                .password("$2a$10$L4cA.wDXaxBESV/FUGchT.WyEFX6qgMrdGGjDl7kt9QMFVWobi5Ne")
+                .login("Egor")
+                .password("321")
                 .build();
 
         cloudFileEntity = CloudFileEntity.builder()
@@ -95,7 +94,6 @@ class CloudControllerTest {
         var result = cloudController.uploadFile(FILE_NAME, mf);
         Assertions.assertEquals(expected, result);
     }
-
     @ParameterizedTest
     @MethodSource("uploadFile")
     void deleteFileTest(boolean flag, ResponseEntity<Void> expected) {
@@ -125,7 +123,7 @@ class CloudControllerTest {
     void getFileTest() {
         var expected = ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + cloudFileDto.getFilename() + "\"")
-                .body(cloudFileDto.getFilename());
+                .body(cloudFileDto.getResource());
 
         when(cloudService.getFile(FILE_NAME)).thenReturn(cloudFileDto);
         var result = cloudController.getFile(FILE_NAME);

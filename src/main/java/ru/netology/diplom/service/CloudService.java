@@ -11,6 +11,7 @@ import ru.netology.diplom.entity.CloudFileEntity;
 import ru.netology.diplom.entity.UserEntity;
 import ru.netology.diplom.repository.CloudRepository;
 import ru.netology.diplom.security.JWTToken;
+import ru.netology.diplom.util.CloudManager;
 
 import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
@@ -28,32 +29,40 @@ public class CloudService {
 
     private final JWTToken jwtToken;
     private final CloudRepository cloudRepository;
+    private final CloudManager cloudManager;
 
 
     @SneakyThrows
     @Transactional()
-    public boolean uploadFile(MultipartFile multipartFile, String filename) {
+    public boolean uploadFile(MultipartFile multipartFile, String fileName) {
+        Optional<CloudFileEntity> cloudFile = getCloudFileEntity(fileName);
+        if (cloudFile.isPresent()) {
+            log.info("Такой файл имеется в БД.");
 
-        log.info("Такого файла нет, можно начинать запись {}", filename);
+        }
+
+        log.info("Такого файла нет, можно начинать запись {}", fileName);
         CloudFileEntity cloudFileEntity = CloudFileEntity.builder()
-                .filename(filename)
+                .filename(fileName)
                 .size(multipartFile.getSize())
                 .date(Instant.now())
                 .key(UUID.randomUUID())
                 .userEntity(
                         UserEntity.builder()
                                 .id(jwtToken.getAuthenticatedUser().getId())
-                                .login(jwtToken.getAuthenticatedUser().getLogin())
                                 .build())
                 .build();
-        log.info("id есть");
 
         var cloudId = cloudRepository.save(cloudFileEntity).getId();
         if (cloudRepository.findById(cloudId).isPresent()) {
-            log.info("Файл {} записан в БД под id '{}'", filename, cloudId);
+            log.info("Файл {} записан в БД под id '{}'", fileName, cloudId);
+        }
+        if (!cloudManager.upload(multipartFile.getBytes(),
+                cloudFileEntity.getKey().toString(),
+                cloudFileEntity.getFilename())) {
+            fileNotFound("Не получилось записать файл");
         }
         log.info("Файл записан на сервер");
-
         return true;
     }
 
@@ -64,8 +73,10 @@ public class CloudService {
         Optional<CloudFileEntity> cloudFile = getCloudFileEntity(filename);
         if (cloudFile.isPresent()) {
             log.info("Файл {} найден на диске", filename);
+            var resourceFromBd = cloudFile.map(cloudManager::getFile).get();
             return CloudFileDto.builder()
                     .filename(filename)
+                    .resource(resourceFromBd)
                     .build();
         } else {
             fileNotFound("Файл не удалось найди в БД");
@@ -76,17 +87,23 @@ public class CloudService {
     @SneakyThrows
     @Transactional()
     public boolean deleteFile(String filename) {
-
         Optional<CloudFileEntity> foundFile = getCloudFileEntity(filename);
-
-        log.info("Ищем файл.");
+        if (foundFile.isEmpty()) {
+            String msg = String.format("Файл %s не существует или у вас нет права доступа", filename);
+            log.info(msg);
+            throw new FileNotFoundException(msg);
+        }
         int idFoundFile = foundFile.get().getId();
         cloudRepository.deleteById(idFoundFile);
         log.info("Произвели удаление из БД файла:  {}", filename);
-
+        if (cloudRepository.findById(idFoundFile).isPresent()) {
+            fileAlreadyExists("Файл не удалось удалить из БД");
+        }
+        if (!cloudManager.delete(foundFile.get())) {
+            fileAlreadyExists("Файл не удалось удалить с сервера");
+        }
         return true;
     }
-
 
     @SneakyThrows
     @Transactional()
@@ -99,8 +116,8 @@ public class CloudService {
             fileAlreadyExists("Такой файл существует");
         }
         cloudRepository.updateFilenameByUserEntityId(cloudFileDto.getFilename(), cloudFile.get().getId());
-        if (getCloudFileEntity(cloudFileDto.getFilename()).isEmpty()) {
-            fileNotFound("Не удалось переименовать файл в БД");
+        if (!cloudManager.renameFileTo(cloudFile.get(), cloudFileDto.getFilename())) {
+            fileNotFound("Не удалось переименовать файл на сервере");
         }
 
         return true;
@@ -134,4 +151,6 @@ public class CloudService {
         log.error(msg);
         throw new FileAlreadyExistsException(msg);
     }
+
+
 }

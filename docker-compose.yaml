@@ -4,6 +4,7 @@ services:
   client-backend:
 
     image: diplom:2024
+    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile
@@ -13,9 +14,10 @@ services:
 
   client:
           container_name: frontend-client
+          restart: unless-stopped
           build:
             context: netology-diplom-frontend
-            dockerfile: Dockerfile
+            dockerfile: Dockerfile-front
           image: front:latest
 
           ports:
