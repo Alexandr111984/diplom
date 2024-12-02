@@ -19,4 +19,5 @@ public interface CloudRepository extends JpaRepository<CloudFileEntity, Integer>
     @Query("select c from CloudFileEntity c where c.filename = ?1")
     Optional<CloudFileEntity> findByFilename(String filename);
 
+
 }

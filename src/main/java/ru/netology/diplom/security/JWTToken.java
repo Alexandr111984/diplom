@@ -6,8 +6,11 @@ import io.jsonwebtoken.security.Keys;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import ru.netology.diplom.details.UserPrincipal;
 import ru.netology.diplom.entity.UserEntity;
+import ru.netology.diplom.service.UserService;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
@@ -25,19 +28,21 @@ public class JWTToken {
     private final SecretKey secret;
     private final int tokenLifetime;
     private final List<String> listTokens = new ArrayList<>();
-    private UserEntity userEntity;
+    private final UserService userService;
 
-    public JWTToken(@Value("${jwt.secret}") String secret, @Value("${TOKEN_LIFETIME}") int tokenLifetime) {
+    public JWTToken(@Value("${jwt.secret}") String secret, @Value("${TOKEN_LIFETIME}") int tokenLifetime, UserService userService) {
         this.secret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
         this.tokenLifetime = tokenLifetime;
+        this.userService = userService;
     }
 
-    public UserEntity getAuthenticatedUser() {
-        return userEntity;
+    public UserPrincipal getAuthenticatedUser() {
+        var au= SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        return userService.loadUserByUsername(au);
     }
 
     public String generateToken(@NonNull UserEntity userEntity) throws IllegalArgumentException {
-        this.userEntity = userEntity;
+        //this.userEntity = userEntity;
         Date now = new Date();
         Date exp = Date.from(LocalDateTime.now().plusMinutes(tokenLifetime)
                 .atZone(ZoneId.systemDefault()).toInstant());
@@ -59,11 +64,11 @@ public class JWTToken {
 
     public boolean validateAccessToken(@NonNull String token) {
         for (String t : listTokens) {
-            if (!t.equals(token)) {
-                return false;
+            if (t.equals(token)) {
+                return validateToken(token, secret);
             }
         }
-        return validateToken(token, secret);
+        return false;
     }
 
     private boolean validateToken(@NonNull String token, @NonNull Key secret) {

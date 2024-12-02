@@ -30,7 +30,6 @@ public class DiplomApplication implements CommandLineRunner {
         userEntity.setPassword(passwordEncoder.encode("123"));
         System.out.println(userEntity);
 
-
         usersRepository.save(userEntity);
 
     }

@@ -1,6 +1,5 @@
 package ru.netology.diplom.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,18 +7,19 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
 @Table(name = "cloud_file_entity")
 public class CloudFileEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "userEntityId", unique = true)
+    @Column(name = "user_entity_id")
     private Integer userEntityId;
 
     @Column(name = "file_name", nullable = false)
@@ -35,11 +35,20 @@ public class CloudFileEntity {
     @Column(name = "file_key")
     private UUID key;
 
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "userEntityId", insertable = false, updatable = false)
-    @JsonIgnore
+    @JoinColumn(name = "user_entity_id", referencedColumnName = "id", insertable = false, updatable = false)
     private UserEntity userEntity;
 
-
+    @Override
+    public String toString() {
+        return "CloudFileEntity{" +
+                "id=" + id +
+                ", userEntityId=" + userEntityId +
+                ", filename='" + filename + '\'' +
+                ", size=" + size +
+                ", date=" + date +
+                ", key=" + key +
+                ", userEntity=" + userEntity +
+                '}';
+    }
 }

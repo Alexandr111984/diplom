@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
+import ru.netology.diplom.details.UserPrincipal;
 import ru.netology.diplom.dto.CloudFileDto;
 import ru.netology.diplom.entity.CloudFileEntity;
 import ru.netology.diplom.entity.UserEntity;
@@ -37,6 +38,8 @@ class CloudServiceTest {
     CloudRepository cloudRepository;
     @InjectMocks
     CloudService cloudService;
+    @Mock
+    UserPrincipal userPrincipal;
 
     UserEntity userEntity;
     CloudFileEntity cloudFileEntity;
@@ -44,6 +47,7 @@ class CloudServiceTest {
     private final int USER_ENTITY_ID = 100;
     private final int CLOUD_FILE_ENTITY_ID = 999;
     private final String FILE_NAME = "testFile.pdf";
+
 
     @BeforeEach
     void setUp() {
@@ -83,7 +87,8 @@ class CloudServiceTest {
                 "testUploadFile".getBytes()
         );
 
-        when(jwtToken.getAuthenticatedUser()).thenReturn(userEntity);
+
+        when(jwtToken.getAuthenticatedUser()).thenReturn(userPrincipal);
         when(cloudManager.upload(any(),any(), any())).thenReturn(true);
         when(cloudRepository.save(any(CloudFileEntity.class))).thenReturn(cloudFileEntity);
 

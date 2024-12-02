@@ -34,16 +34,25 @@ public class CloudService {
 
     @SneakyThrows
     @Transactional()
-    public boolean uploadFile(MultipartFile multipartFile, String fileName) {
-        Optional<CloudFileEntity> cloudFile = getCloudFileEntity(fileName);
+    public boolean uploadFile(MultipartFile multipartFile, String filename) {
+        Optional<CloudFileEntity> cloudFile = getCloudFileEntity(filename);
         if (cloudFile.isPresent()) {
-            log.info("Такой файл имеется в БД.");
-
+            log.info("Такой файл имеется в БД, начинаем переименовывать {}", filename);
+            String renameFile = filename;
+            var indexPoint = filename.indexOf(".");
+            for (int i = 1; i < Integer.MAX_VALUE; i++) {
+                renameFile = String.format(filename.substring(0, indexPoint) + " (%d)" + filename.substring(indexPoint), i);
+                cloudFile = getCloudFileEntity(renameFile);
+                if (cloudFile.isEmpty()) {
+                    break;
+                }
+            }
+            filename = renameFile;
         }
 
-        log.info("Такого файла нет, можно начинать запись {}", fileName);
+        log.info("Такого файла нет, можно начинать запись {}", filename);
         CloudFileEntity cloudFileEntity = CloudFileEntity.builder()
-                .filename(fileName)
+                .filename(filename)
                 .size(multipartFile.getSize())
                 .date(Instant.now())
                 .key(UUID.randomUUID())
@@ -55,7 +64,7 @@ public class CloudService {
 
         var cloudId = cloudRepository.save(cloudFileEntity).getId();
         if (cloudRepository.findById(cloudId).isPresent()) {
-            log.info("Файл {} записан в БД под id '{}'", fileName, cloudId);
+            log.info("Файл {} записан в БД под id '{}'", filename, cloudId);
         }
         if (!cloudManager.upload(multipartFile.getBytes(),
                 cloudFileEntity.getKey().toString(),
